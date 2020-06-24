@@ -12,5 +12,6 @@ ESLint tweaks
 
 Clone this repo
 
-Edit setup.js and modify the config object to suit the project
-run `yarn && yarn setup`
+- run `composer install`
+- Edit setup.js and modify the config object to suit the project
+- run `yarn && yarn setup`
