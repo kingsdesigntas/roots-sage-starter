@@ -11,12 +11,10 @@
   "bugs": {
     "url": "https://github.com/roots/sage/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://opensource.org/licenses/MIT"
-    }
-  ],
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://opensource.org/licenses/MIT"
+  }],
   "browserslist": [
     "last 2 versions",
     "android 4",
@@ -31,7 +29,8 @@
     "lint": "npm run -s lint:scripts && npm run -s lint:styles",
     "lint:scripts": "eslint resources/assets/scripts resources/assets/build",
     "lint:styles": "stylelint \"resources/assets/styles/**/*.{css,sass,scss,sss,less}\"",
-    "test": "npm run -s lint"
+    "test": "npm run -s lint",
+    "setup": "node setup.js"
   },
   "engines": {
     "node": ">= 8.0.0"
