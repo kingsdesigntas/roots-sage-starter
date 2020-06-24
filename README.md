@@ -7,3 +7,10 @@ Stylelint removed.
 Navwalker added
 
 ESLint tweaks
+
+## Get started
+
+Clone this repo
+
+Edit setup.js and modify the config object to suit the project
+run `yarn && yarn setup`
