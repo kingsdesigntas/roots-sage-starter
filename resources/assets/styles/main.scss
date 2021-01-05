@@ -37,8 +37,6 @@
 /** Import theme styles */
 @import "common/global";
 @import "components/copy";
-@import "components/buttons";
-@import "components/comments";
 @import "components/forms";
 @import "components/wp-classes";
 @import "layouts/header";
@@ -58,6 +56,69 @@
  */
 @tailwind utilities;
 
+@layer utilities {
+  @responsive {
+    .aspect-ratio {
+      @apply relative;
+
+      &:before {
+        @apply h-0 block;
+        content: "";
+        padding-bottom: var(--aspect-ratio);
+      }
+
+      &>* {
+        @apply overflow-hidden absolute flex items-center w-full h-full;
+        inset: 0px;
+      }
+
+      img {
+        object-fit: cover;
+      }
+
+      &>picture>img {
+        @apply w-full h-full;
+      }
+    }
+
+    .btn {
+      @apply px-3 py-1 inline-flex items-center justify-center border-solid border transition duration-200 cursor-pointer;
+
+      &:focus {
+        @apply outline-none shadow-outline;
+      }
+
+      &.btn-link {
+        @apply border-transparent bg-transparent px-0 py-0 underline;
+      }
+    }
+
+    .btn-lg {
+      @apply px-5 py-2 text-lg;
+    }
+
+    // EG
+    // .btn-gray {
+    //   @apply bg-gray-500 text-white border-gray-500;
+
+    //   &:hover {
+    //     @apply bg-gray-600 border-gray-600;
+    //   }
+
+    //   &.btn-outline {
+    //     @apply bg-transparent border-gray-500 text-gray-500;
+
+    //     &:hover {
+    //       @apply bg-gray-600 bg-opacity-25 border-gray-600;
+    //     }
+    //   }
+    // }
+
+    
+  }
+}
+
+
 /**
  * Here you would add any custom utilities you need that don't come out of the
  * box with Tailwind.
@@ -72,3 +133,8 @@
  * @import "utilities/background-patterns";
  * @import "utilities/skew-transforms";
  */
+
+ // For alpine
+  [x-cloak] {
+    display: none;
+  }
