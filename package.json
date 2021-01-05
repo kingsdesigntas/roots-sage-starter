@@ -75,7 +75,10 @@
   "dependencies": {
     "@babel/core": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
+    "@ryangjchandler/spruce": "^2.4.0",
+    "alpinejs": "^2.8.0",
     "babel-loader": "^8.1.0",
+    "dom-focus-lock": "^1.0.4",
     "jquery": "^3.3.1",
     "node-sass": "^4.14.1",
     "tailwindcss": "^2.0.2"
