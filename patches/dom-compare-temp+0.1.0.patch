@@ -1,0 +1,14 @@
+diff --git a/node_modules/dom-compare-temp/lib/compare.js b/node_modules/dom-compare-temp/lib/compare.js
+index 73f6361..da931e5 100644
+--- a/node_modules/dom-compare-temp/lib/compare.js
++++ b/node_modules/dom-compare-temp/lib/compare.js
+@@ -111,6 +111,9 @@
+                // fallthrough
+             case type.CDATA_SECTION_NODE:
+                // fallthrough
++            case type.DOCUMENT_FRAGMENT_NODE:
++               // fallthrough
++               // Monkey patched
+             case type.COMMENT_NODE:
+                if (left.nodeType == type.COMMENT_NODE && !this._options.compareComments)
+                   return true;

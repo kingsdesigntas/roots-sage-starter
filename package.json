@@ -30,7 +30,8 @@
     "lint:scripts": "eslint resources/assets/scripts resources/assets/build",
     "lint:styles": "stylelint \"resources/assets/styles/**/*.{css,sass,scss,sss,less}\"",
     "test": "npm run -s lint",
-    "setup": "node setup.js"
+    "setup": "node setup.js",
+    "postinstall": "patch-package"
   },
   "engines": {
     "node": ">= 8.0.0"
