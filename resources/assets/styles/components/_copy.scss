@@ -1,5 +1,9 @@
 .copy {
   @apply text-lg leading-relaxed;
+  
+  a {
+    @apply underline;
+  }
 
   h1 {
     @apply text-4xl my-6;
@@ -39,5 +43,33 @@
 
   ol {
     @apply list-inside list-decimal;
+  }
+
+  blockquote {
+    @apply px-4;
+  }
+
+  &.copy-sm {
+    @apply text-base;
+
+    p {
+      @apply my-2;
+    }
+
+    h1 {
+      @apply text-3xl my-5;
+    }
+
+    h2 {
+      @apply text-2xl my-4;
+    }
+
+    h3 {
+      @apply text-xl font-bold my-3;
+    }
+
+    h4 {
+      @apply font-bold text-lg my-2;
+    }
   }
 }
