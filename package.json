@@ -17,8 +17,7 @@
   }],
   "browserslist": [
     "last 2 versions",
-    "android 4",
-    "opera 12"
+    "android 6"
   ],
   "scripts": {
     "build": "webpack --progress --config resources/assets/build/webpack.config.js",
