@@ -81,6 +81,11 @@ add_action('after_setup_theme', function () {
  */
   add_theme_support('custom-logo');
 
+  /**
+   * Add alignwide/alignfull support
+   */
+  add_theme_support('align-wide');
+
 /**
  * Add image size
  */
@@ -209,9 +214,13 @@ $block = apply_filters("sage/blocks/$slug/data", $block);
 $block['classes'] = implode(' ', array_filter($block['classes']));
 
 $template = '';
-if ($block['name'] === 'my-custom-block') {
+if ($block['name'] === 'acf/my-custom-block') {
 $template = 'blocks.custom-block';
 }
 
+if (!empty($template)) {
 echo \App\template($template, ['block' => $block]);
+} else {
+echo '<p><strong>Block template missing!</strong></p>';
+}
 }
