@@ -1,20 +1,4 @@
-/* eslint-disable */
-
-// const autoprefixer = require("autoprefixer");
-
-// const cssnanoConfig = {
-//   preset: ['default', { discardComments: { removeAll: true } }]
-// };
-
-// module.exports = ({ file, options }) => {
-//   return {
-//     parser: options.enabled.optimize ? 'postcss-safe-parser' : undefined,
-//     plugins: {
-//       autoprefixer: true,
-//       cssnano: options.enabled.optimize ? cssnanoConfig : false,
-//     },
-//   };
-// };
+const path = require("path");
 
 module.exports = {
   plugins: [
@@ -22,6 +6,8 @@ module.exports = {
       browsers: "last 2 versions",
     }),
     require("autoprefixer"),
-    require("tailwindcss"),
+    require("tailwindcss")(
+      path.join(__dirname, `../styles/tailwind.config.js`)
+    ),
   ],
 };

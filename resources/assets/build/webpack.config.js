@@ -84,12 +84,10 @@ let webpackConfig = {
     ],
   },
   plugins: [
-    // Extract css to separate files (only on build)
-    config.enabled.watcher
-      ? null
-      : new MiniCssExtractPlugin({
-          filename: "styles/[name].css",
-        }),
+    // Extract css to separate files
+    new MiniCssExtractPlugin({
+      filename: `styles/${assetsFilenames}.css`,
+    }),
     // Remove /dist directory before build
     config.enabled.watcher ? null : new CleanWebpackPlugin(),
     // Print nice errors
