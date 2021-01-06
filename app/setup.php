@@ -19,6 +19,9 @@ add_action('wp_enqueue_scripts', function () {
   }
 }, 100);
 
+// Disable woocommerce stylesheets
+add_filter('woocommerce_enqueue_styles', '__return_empty_array');
+
 /**
  * Theme setup
  */
