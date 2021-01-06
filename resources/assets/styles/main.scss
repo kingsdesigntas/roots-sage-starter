@@ -12,9 +12,6 @@
 @tailwind base;
 
 
-/** Import everything from autoload */
-@import "./autoload/**/*";
-
 /**
  * Import npm dependencies
  *
@@ -83,7 +80,7 @@
       @apply px-3 py-1 inline-flex items-center justify-center border-solid border transition duration-200 cursor-pointer;
 
       &:focus {
-        @apply outline-none shadow-outline;
+        @apply outline-none ring;
       }
 
       &.btn-link {
