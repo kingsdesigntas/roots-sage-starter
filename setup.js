@@ -53,6 +53,7 @@ const config = {
 //
 
 async function setup() {
+  validateConfigHash();
   await updateConfigJSONFile();
   await updateStyleCSSFile();
   console.log("Done");
@@ -60,6 +61,16 @@ async function setup() {
 }
 
 setup();
+
+function validateConfigHash() {
+  Object.keys(config).map((configKey) => {
+    if (config[configKey].match(/{(.*?)}/)) {
+      console.error(`Please update your setup.js file, key: ${configKey}`);
+      process.exitCode = 1;
+      process.exit;
+    }
+  });
+}
 
 async function updateConfigJSONFile() {
   const configFilePath = path.join(
@@ -75,11 +86,6 @@ async function updateConfigJSONFile() {
 
     //Update the config keys
     Object.keys(configFileJSON).map((configKey) => {
-      if (config[configKey].match(/{(.*?)}/)) {
-        console.error(`Please update your setup.js file, key: ${configKey}`);
-        process.exitCode = 1;
-        process.exit;
-      }
       if (typeof config[configKey] !== `undefined`) {
         configFileJSON[configKey] = config[configKey];
       }
