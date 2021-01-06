@@ -1,17 +1,56 @@
+// DON'T EDIT HERE
 const fs = require("fs").promises;
 const path = require("path");
+//
+//
+
+// ==============
+//
+//  EDIT THIS CONFIG
+//
+// ==============
+
+/**
+ * Replace any config values with {value} to your settings
+ * You should have created a blank/vanilla install on the dev server
+ * and configured a DNS rule in Cloudflare for {dev-subdomain}.kingsdesign.info
+ * to point to that install
+ */
 
 const config = {
-  themeName: "Sage Starter Theme",
-  themeUri: "https://kingsdesign.com.au",
-  description: "Sage is a Wordpress starter theme",
+  themeName: "{Your Theme Name}",
+  themeUri: "https://{clientdomain.com.au}",
+  description: "Theme for {Client Name}",
   version: "1.0.0",
   author: "KingsDesign",
   authorUri: "https://www.kingsdesign.com.au",
-  devUrl: "http://kingsdesign.info",
-  publicPath: "/wp-content/themes/roots-sage-starter",
-  proxyUrl: "http://localhost:3000",
+  devUrl: "http://{dev-subdomain}.kingsdesign.info",
+  publicPath: "/wp-content/themes/{theme-name}",
+  proxyUrl: "localhost:3000",
 };
+
+// ==============
+//
+//  DONE EDITING, STOP HERE
+//
+// ==============
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 async function setup() {
   await updateConfigJSONFile();
@@ -36,6 +75,11 @@ async function updateConfigJSONFile() {
 
     //Update the config keys
     Object.keys(configFileJSON).map((configKey) => {
+      if (config[configKey].match(/{(.*?)}/)) {
+        console.error(`Please update your setup.js file, key: ${configKey}`);
+        process.exitCode = 1;
+        process.exit;
+      }
       if (typeof config[configKey] !== `undefined`) {
         configFileJSON[configKey] = config[configKey];
       }
@@ -50,6 +94,8 @@ async function updateConfigJSONFile() {
     return true;
   } catch (e) {
     console.error("Failed to update config.json", e);
+    process.exitCode = 1;
+    process.exit;
     return false;
   }
 }
@@ -109,6 +155,8 @@ async function updateCSSMeta(filePath, config) {
     await fs.writeFile(filePath, newFileContent, "utf-8");
   } catch (e) {
     console.error(`Failed to read CSS file ${filePath}.`, e);
+    process.exitCode = 1;
+    process.exit;
     return false;
   }
 }

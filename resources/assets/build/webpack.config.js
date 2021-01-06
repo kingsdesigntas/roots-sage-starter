@@ -1,13 +1,9 @@
-"use strict"; // eslint-disable-line
-
 const webpack = require("webpack");
-const merge = require("webpack-merge");
-const CleanPlugin = require("clean-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const CopyGlobsPlugin = require("copy-globs-webpack-plugin");
+const { merge } = require("webpack-merge");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const desire = require("./util/desire");
 const config = require("./config");
 
 const assetsFilenames = config.enabled.cacheBusting
@@ -15,9 +11,10 @@ const assetsFilenames = config.enabled.cacheBusting
   : "[name]";
 
 let webpackConfig = {
+  mode: config.env.production ? "production" : "development",
   context: config.paths.assets,
   entry: config.entry,
-  devtool: config.enabled.sourceMaps ? "#source-map" : undefined,
+  devtool: config.enabled.sourceMaps ? "source-map" : undefined,
   output: {
     path: config.paths.dist,
     publicPath: config.publicPath,
@@ -39,31 +36,14 @@ let webpackConfig = {
   },
   module: {
     rules: [
+      //
+      // SCRIPTS
+      //
       {
-        enforce: "pre",
         test: /\.js$/,
-        include: config.paths.assets,
-        use: "eslint",
-      },
-      {
-        enforce: "pre",
-        test: /\.(js|s?[ca]ss)$/,
-        include: config.paths.assets,
-        loader: "import-glob",
-      },
-      /*{
-        test: /\.js$/,
-        exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites))/],
+        exclude: [/node_modules/],
         use: [
-          { loader: "cache" },
-          { loader: "buble", options: { objectAssign: "Object.assign" } },
-        ],
-      },*/
-      {
-        test: /\.js$/,
-        exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites))/],
-        use: [
-          { loader: "cache" },
+          { loader: "cache-loader" },
           {
             loader: "babel-loader",
             options: {
@@ -72,144 +52,65 @@ let webpackConfig = {
           },
         ],
       },
+      //
+      // STYLES
+      //
       {
-        test: /\.css$/,
         include: config.paths.assets,
-        use: ExtractTextPlugin.extract({
-          fallback: "style",
-          use: [
-            { loader: "cache" },
-            {
-              loader: "css",
-              options: { sourceMap: config.enabled.sourceMaps },
-            },
-            {
-              loader: "postcss",
-              options: {
-                config: { path: __dirname, ctx: config },
-                sourceMap: config.enabled.sourceMaps,
+        test: /\.(scss|css)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: { sourceMap: config.enabled.sourceMaps },
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                config: `${__dirname}/postcss.config.js`,
               },
+              sourceMap: config.enabled.sourceMaps,
             },
-          ],
-        }),
-      },
-      {
-        test: /\.scss$/,
-        include: config.paths.assets,
-        use: ExtractTextPlugin.extract({
-          fallback: "style",
-          use: [
-            { loader: "cache" },
-            {
-              loader: "css",
-              options: { sourceMap: config.enabled.sourceMaps },
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: config.enabled.sourceMaps,
             },
-            {
-              loader: "postcss",
-              options: {
-                config: { path: __dirname, ctx: config },
-                sourceMap: config.enabled.sourceMaps,
-              },
-            },
-            {
-              loader: "resolve-url",
-              options: { sourceMap: config.enabled.sourceMaps },
-            },
-            {
-              loader: "sass",
-              options: {
-                sourceMap: config.enabled.sourceMaps,
-                sourceComments: true,
-              },
-            },
-          ],
-        }),
-      },
-      {
-        test: /\.(ttf|otf|eot|woff2?|png|jpe?g|gif|svg|ico)$/,
-        include: config.paths.assets,
-        loader: "url",
-        options: {
-          limit: 4096,
-          name: `[path]${assetsFilenames}.[ext]`,
-        },
-      },
-      {
-        test: /\.(ttf|otf|eot|woff2?|png|jpe?g|gif|svg|ico)$/,
-        include: /node_modules/,
-        loader: "url",
-        options: {
-          limit: 4096,
-          outputPath: "vendor/",
-          name: `${config.cacheBusting}.[ext]`,
-        },
+          },
+        ],
       },
     ],
   },
-  resolve: {
-    modules: [config.paths.assets, "node_modules"],
-    enforceExtension: false,
-  },
-  resolveLoader: {
-    moduleExtensions: ["-loader"],
-  },
-  externals: {
-    jquery: "jQuery",
-  },
   plugins: [
-    new CleanPlugin([config.paths.dist], {
-      root: config.paths.root,
-      verbose: false,
-    }),
-    /**
-     * It would be nice to switch to copy-webpack-plugin, but
-     * unfortunately it doesn't provide a reliable way of
-     * tracking the before/after file names
-     */
-    new CopyGlobsPlugin({
-      pattern: config.copy,
-      output: `[path]${assetsFilenames}.[ext]`,
-      manifest: config.manifest,
-    }),
-    new ExtractTextPlugin({
-      filename: `styles/${assetsFilenames}.css`,
-      allChunks: true,
-      disable: config.enabled.watcher,
-    }),
+    // Extract css to separate files (only on build)
+    config.enabled.watcher
+      ? null
+      : new MiniCssExtractPlugin({
+          filename: "styles/[name].css",
+        }),
+    // Remove /dist directory before build
+    config.enabled.watcher ? null : new CleanWebpackPlugin(),
+    // Print nice errors
+    new FriendlyErrorsWebpackPlugin(),
+    // Make jQuery available without importing. We don't support jQuery, but sometimes you can't avoid it
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery",
       "window.jQuery": "jquery",
-      Popper: "popper.js/dist/umd/popper.js",
     }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: config.enabled.optimize,
-      debug: config.enabled.watcher,
-      stats: { colors: true },
-    }),
-    new webpack.LoaderOptionsPlugin({
-      test: /\.s?css$/,
-      options: {
-        output: { path: config.paths.dist },
-        context: config.paths.assets,
-      },
-    }),
-    new webpack.LoaderOptionsPlugin({
-      test: /\.js$/,
-      options: {
-        eslint: { failOnWarning: false, failOnError: true },
-      },
-    }),
-    /*new StyleLintPlugin({
-      failOnError: !config.enabled.watcher,
-      syntax: "scss",
-    }),*/
-    new FriendlyErrorsWebpackPlugin(),
-  ],
-}; /** Let's only load dependencies as needed */
+  ].filter(Boolean),
+  externals: {
+    jquery: "jQuery",
+  },
+};
 
-/* eslint-disable global-require */ if (config.enabled.optimize) {
-  webpackConfig = merge(webpackConfig, require("./webpack.config.optimize"));
+if (config.enabled.optimize) {
+  webpackConfig = merge(
+    webpackConfig,
+    require("./webpack.config.optimize")(config)
+  );
 }
 
 if (config.env.production) {
@@ -232,18 +133,10 @@ if (config.enabled.cacheBusting) {
 
 if (config.enabled.watcher) {
   webpackConfig.entry = require("./util/addHotMiddleware")(webpackConfig.entry);
-  webpackConfig = merge(webpackConfig, require("./webpack.config.watch"));
+  webpackConfig = merge(
+    webpackConfig,
+    require("./webpack.config.watch")(config)
+  );
 }
 
-/**
- * During installation via sage-installer (i.e. composer create-project) some
- * presets may generate a preset specific config (webpack.config.preset.js) to
- * override some of the default options set here. We use webpack-merge to merge
- * them in. If you need to modify Sage's default webpack config, we recommend
- * that you modify this file directly, instead of creating your own preset
- * file, as there are limitations to using webpack-merge which can hinder your
- * ability to change certain options.
- */
-module.exports = merge.smartStrategy({
-  "module.loaders": "replace",
-})(webpackConfig, desire(`${__dirname}/webpack.config.preset`));
+module.exports = webpackConfig;
