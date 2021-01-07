@@ -21,7 +21,6 @@ const config = merge(
     open: false,
     copy: "images/**/*",
     proxyUrl: "http://localhost:3000",
-    cacheBusting: "[name]_[chunkhash]",
     paths: {
       root: rootPath,
       assets: path.join(rootPath, "resources/assets"),
@@ -60,12 +59,3 @@ if (process.env.NODE_ENV === undefined) {
 if (process.env.SAGE_DIST_PATH) {
   module.exports.publicPath = process.env.SAGE_DIST_PATH;
 }
-
-/**
- * If you don't know your publicPath at compile time, then uncomment the lines
- * below and use WordPress's wp_localize_script() to set SAGE_DIST_PATH global.
- * Example:
- *   wp_localize_script('sage/main.js', 'SAGE_DIST_PATH', get_theme_file_uri('dist/'))
- */
-// Object.keys(module.exports.entry).forEach(id =>
-//   module.exports.entry[id].unshift(path.join(__dirname, 'helpers/public-path.js')));

@@ -7,8 +7,11 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const config = require("./config");
 
 const assetsFilenames = config.enabled.cacheBusting
-  ? config.cacheBusting
+  ? "[name].[contenthash]"
   : "[name]";
+const chunkFilenames = config.enabled.cacheBusting
+  ? "[id].[contenthash]"
+  : "[id]";
 
 let webpackConfig = {
   mode: config.env.production ? "production" : "development",
@@ -19,6 +22,7 @@ let webpackConfig = {
     path: config.paths.dist,
     publicPath: config.publicPath,
     filename: `scripts/${assetsFilenames}.js`,
+    chunkFilename: `scripts/${chunkFilenames}.js`,
   },
   stats: {
     hash: false,
@@ -59,10 +63,17 @@ let webpackConfig = {
         include: config.paths.assets,
         test: /\.(scss|css)$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {},
+          },
           {
             loader: "css-loader",
-            options: { sourceMap: config.enabled.sourceMaps },
+            options: {
+              sourceMap: config.enabled.sourceMaps,
+              importLoaders: 2,
+              url: false,
+            },
           },
           {
             loader: "postcss-loader",
@@ -79,7 +90,7 @@ let webpackConfig = {
               sourceMap: config.enabled.sourceMaps,
             },
           },
-        ],
+        ].filter(Boolean),
       },
     ],
   },
@@ -87,6 +98,7 @@ let webpackConfig = {
     // Extract css to separate files
     new MiniCssExtractPlugin({
       filename: `styles/${assetsFilenames}.css`,
+      chunkFilename: `styles/${chunkFilenames}.css`,
     }),
     // Remove /dist directory before build
     config.enabled.watcher ? null : new CleanWebpackPlugin(),

@@ -5,11 +5,13 @@
  * @return {Object} entry with hot middleware
  */
 module.exports = (entry) => {
-  const results = {};
+  const results = {
+    ["hmr-client"]: `${__dirname}/../helpers/hmr-client.js`,
+  };
 
   Object.keys(entry).forEach((name) => {
-    results[name] = Array.isArray(entry[name]) ? entry[name].slice(0) : [entry[name]];
-    results[name].unshift(`${__dirname}/../helpers/hmr-client.js`);
+    results[name] = entry[name];
   });
+
   return results;
 };

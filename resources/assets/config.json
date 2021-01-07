@@ -11,7 +11,6 @@
   "publicPath": "/wp-content/themes/roots-sage-starter",
   "devUrl": "https://kingsdesign.info",
   "proxyUrl": "localhost:3000",
-  "cacheBusting": "[name]_[chunkhash:8]",
   "watch": [
     "app/**/*.php",
     "config/**/*.php",
