@@ -80,6 +80,9 @@ const configureDevServer = (config) => {
           "X-Requested-With, content-type, Authorization",
       },
     },
+    resolve: {
+      fallback: { url: require.resolve("url/") },
+    },
   };
 };
 
