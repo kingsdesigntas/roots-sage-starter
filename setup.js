@@ -24,7 +24,7 @@ const config = {
   version: "1.0.0",
   author: "KingsDesign",
   authorUri: "https://www.kingsdesign.com.au",
-  devUrl: "http://{dev-subdomain}.kingsdesign.info",
+  devUrl: "https://{dev-subdomain}.kingsdesign.info",
   publicPath: "/wp-content/themes/{theme-name}",
   proxyUrl: "localhost:3000",
 };

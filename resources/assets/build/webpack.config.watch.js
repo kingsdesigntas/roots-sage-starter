@@ -49,12 +49,12 @@ const configureDevServer = (config) => {
                     // Add hmr-client
                     body = body.replace(
                       /<\/body>/,
-                      `<script src="http://${config.proxyUrl}/wp-content/themes/quescreen/dist/scripts/hmr-client.js?host=${host}&port=${port}"></script></body>`
+                      `<script src="http://${config.proxyUrl}${config.publicPath}/scripts/hmr-client.js?host=${host}&port=${port}"></script></body>`
                     );
 
                     // rewrite links
                     const devUrlRegExp = new RegExp(
-                      escapeRegExp(config.devUrl),
+                      escapeRegExp(config.devUrl).replace(/https?/, "https?"),
                       "g"
                     );
 
