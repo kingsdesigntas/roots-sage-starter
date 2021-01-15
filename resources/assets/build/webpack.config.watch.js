@@ -1,13 +1,18 @@
 const proxyResponseRewrite = require("./util/proxyResponseRewrite");
 const chokidar = require("chokidar");
+const getPort = require("get-port");
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
-const configureDevServer = (config) => {
-  const [host, port = 80] = config.proxyUrl.split(":");
+const configureDevServer = async (config) => {
+  const [host, _port = 80] = config.proxyUrl.split(":");
   const target = process.env.DEVURL || config.devUrl;
+
+  const port = await getPort({
+    port: getPort.makeRange(+_port, +_port + 1000),
+  });
 
   return {
     devtool: "cheap-module-source-map",
@@ -27,7 +32,7 @@ const configureDevServer = (config) => {
       // open: true,
       overlay: true,
       port,
-      publicPath: host + ":" + port + config.publicPath,
+      publicPath: config.publicPath,
       proxy: {
         "*": {
           changeOrigin: true,
@@ -39,6 +44,7 @@ const configureDevServer = (config) => {
               proxyRes.headers["content-type"] &&
               proxyRes.headers["content-type"].match(/^text\/html/)
             ) {
+              const [host, port = 80] = req.headers.host.split(":");
               proxyResponseRewrite(
                 res,
                 proxyRes.headers["content-encoding"],
@@ -49,7 +55,7 @@ const configureDevServer = (config) => {
                     // Add hmr-client
                     body = body.replace(
                       /<\/body>/,
-                      `<script src="http://${config.proxyUrl}${config.publicPath}/scripts/hmr-client.js?host=${host}&port=${port}"></script></body>`
+                      `<script src="http://${host}:${port}${config.publicPath}/scripts/hmr-client.js?host=${host}&port=${port}"></script></body>`
                     );
 
                     // rewrite links
@@ -58,10 +64,7 @@ const configureDevServer = (config) => {
                       "g"
                     );
 
-                    body = body.replace(
-                      devUrlRegExp,
-                      "http://" + config.proxyUrl
-                    );
+                    body = body.replace(devUrlRegExp, `http://${host}:${port}`);
                   }
 
                   return body;
