@@ -4,9 +4,10 @@
   @include('partials.page-header')
 
   @if (!have_posts())
-    <div class="alert alert-warning">
-      {{ __('Sorry, but the page you were trying to view does not exist.', 'sage') }}
+   <div class="container py-16 ">
+      <div class="alert alert-warning font-bold">
+        <h3 class="font-bold text-2xl"> {{ __('Sorry, but the page you were trying to view does not exist.', 'sage') }} </h3>
+      </div>
     </div>
-    {!! get_search_form(false) !!}
   @endif
 @endsection
