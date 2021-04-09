@@ -20,6 +20,12 @@ const colors = {
 };
 
 module.exports = {
+  purge: [
+ "./resources/**/*.php",
+ "./resources/assets/styles/**/*.scss",
+ "./app/**/*.php",
+ ],
+  mode: 'jit',
   theme: {
     container: {
       center: true,
