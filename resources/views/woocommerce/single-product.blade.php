@@ -37,4 +37,3 @@ do_action('get_sidebar', 'shop');
 do_action('get_footer', 'shop');
 @endphp
 @endsection
-SAVE TO CACHER
