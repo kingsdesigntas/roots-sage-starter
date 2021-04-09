@@ -23,7 +23,7 @@
     "opera 12"
   ],
   "scripts": {
-    "build": "webpack --progress --config resources/assets/build/webpack.config.js",
+    "build": "TAILWIND_MODE=build webpack --progress --config resources/assets/build/webpack.config.js",
     "build:production": "webpack --mode=\"production\" --progress --config resources/assets/build/webpack.config.js",
     "build:profile": "webpack --progress --profile --json --config resources/assets/build/webpack.config.js",
     "start": "webpack serve --watch --config resources/assets/build/webpack.config.js",
