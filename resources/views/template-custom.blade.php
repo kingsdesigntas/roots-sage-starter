@@ -1,7 +1,6 @@
-{{--
-  Template Name: Custom Template
---}}
-
+@php  
+//Template Name: Custom Template
+@endphp
 @extends('layouts.app')
 
 @section('content')
