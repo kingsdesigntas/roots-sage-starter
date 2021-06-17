@@ -9,11 +9,11 @@
       </nav>
       <button aria-label="open mobile menu" class="block md:hidden ml-2" x-data
       @click="$store.navigation.triggerEl = $event.currentTarget; $store.navigation.open = !$store.navigation.open;">
-      <svg class="fill-current text-black dark:text-white transition duration-500" width="25" viewBox="0 0 50 50">
+      <svg class="fill-current text-black dark:text-white transition duration-500" width="25" viewBox="0 0 50 40">
         <g>
-          <rect width="50" height="10" />
-          <rect y="20" width="50" height="10" />
-          <rect y="40" width="50" height="10" />
+          <rect width="50" height="5"></rect>
+          <rect y="15" width="50" height="5"></rect>
+          <rect y="30" width="50" height="5"></rect>
         </g>
       </svg>
     </button>
